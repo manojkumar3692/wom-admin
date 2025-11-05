@@ -81,4 +81,15 @@ export async function me() {
     const {data} = await api.post(`${API_BASE}/api/orders/${id}/status`, { status });
     return data;
   }
+
+  export async function listProducts(orgId?: string) {
+    const { data } = await api.get('/api/admin/products', { params: { org_id: orgId } });
+    return data;
+  }
+  export async function addProductAlias(id: string, alias: string) {
+    const { data } = await api.post(`/api/admin/products/${id}/add-alias`, { alias });
+    return data;
+  }
+
+  
 export default api;

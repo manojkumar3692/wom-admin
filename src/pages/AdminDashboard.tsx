@@ -7,6 +7,7 @@ import {
   listCorrections,
   aiSpend,
 } from "../lib/api";
+import ProductsTab from "../components/ProductsTab";
 
 // ---------- tiny UI helpers ----------
 function Badge({ tone = "gray", children }: any) {
@@ -39,7 +40,7 @@ function Topbar({ tab, setTab }: { tab: string; setTab: (v: any) => void }) {
           <div className="text-lg font-semibold">KartoSync Admin</div>
         </div>
         <div className="flex items-center gap-2">
-          {["orgs", "orders", "learning", "spend"].map((t) => (
+          {["orgs", "orders", "learning", "spend","products"].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -51,6 +52,7 @@ function Topbar({ tab, setTab }: { tab: string; setTab: (v: any) => void }) {
               {t === "orders" && "Orders"}
               {t === "learning" && "AI Learning"}
               {t === "spend" && "Spend"}
+              {t === "products" && "products"}
             </button>
           ))}
           <button
@@ -125,13 +127,14 @@ function OrgsTab() {
                 <th>Phone</th>
                 <th>Plan</th>
                 <th>WA ID</th>
+                <th>UUID</th>
                 <th>Status</th>
                 <th>Created</th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {orgs.map((o) => (
+              {orgs.map((o:any) => (
                 <tr key={o.id} className="border-t">
                   <td className="py-2 font-medium">{o.name}</td>
                   <td className="text-gray-600">{o.phone || "—"}</td>
@@ -139,6 +142,7 @@ function OrgsTab() {
                     <Badge tone={o.plan === "pro" ? "green" : "gray"}>{o.plan || "—"}</Badge>
                   </td>
                   <td className="text-gray-600">{o.wa_phone_number_id || "—"}</td>
+                  <td className="text-gray-600">{o.id || "—"}</td>
                   <td>{o.is_disabled ? <Badge tone="red">Disabled</Badge> : <Badge tone="green">Active</Badge>}</td>
                   <td className="text-gray-600">{new Date(o.created_at).toLocaleString()}</td>
                   <td>
@@ -417,7 +421,7 @@ function SpendTab() {
 
 // ---------- Page ----------
 export default function AdminDashboard() {
-  const [tab, setTab] = useState<"orgs" | "orders" | "learning" | "spend">("orgs");
+  const [tab, setTab] = useState<"orgs" | "orders" | "learning" | "spend" | "products">("orgs");
   return (
     <div className="min-h-screen bg-gray-50">
       <Topbar tab={tab} setTab={setTab} />
@@ -426,6 +430,7 @@ export default function AdminDashboard() {
         {tab === "orders" && <OrdersTab />}
         {tab === "learning" && <LearningTab />}
         {tab === "spend" && <SpendTab />}
+        {tab === "products" && <ProductsTab />}
       </div>
     </div>
   );
