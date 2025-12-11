@@ -56,8 +56,18 @@ export async function listCorrections(orgId?: string) {
   return data;
 }
 
-export async function aiSpend(range: 'daily'|'weekly'|'monthly' = 'daily') {
-  const { data } = await api.get('/api/admin/ai-spend/summary', { params: { range } });
+// src/lib/api.ts
+
+export async function aiSpend(
+  range: "daily" | "weekly" | "monthly" = "daily",
+  orgId?: string
+) {
+  const { data } = await api.get("/api/admin/ai-spend/summary", {
+    params: {
+      range,
+      org_id: orgId || undefined, // backend can treat undefined = all orgs
+    },
+  });
   return data;
 }
 
@@ -91,5 +101,33 @@ export async function me() {
     return data;
   }
 
+  // src/lib/api.ts
+
+export async function adminMe() {
+  const { data } = await api.get('/api/admin/me');
+  return data; // { username: string, role?: string, ... }
+}
+
+export async function changeAdminPassword(oldPassword: string, newPassword: string) {
+  const { data } = await api.post('/api/admin/change-password', {
+    old_password: oldPassword,
+    new_password: newPassword,
+  });
+  return data; // { ok: true } or similar
+}
+
+// src/lib/api.ts
+
+export async function setOrgParseMode(orgId: string, mode: 'ai' | 'manual') {
+  const { data } = await api.post(`/api/admin/orgs/${orgId}/parse-mode`, {
+    parse_mode: mode,
+  });
+  return data;
+}
+
+export async function getOrgStats(orgId: string) {
+  const { data } = await api.get(`/api/admin/orgs/${orgId}/stats`);
+  return data;
+}
   
 export default api;
